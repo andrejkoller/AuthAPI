@@ -1,5 +1,6 @@
 
 using AuthAPI.Data;
+using AuthAPI.Middlewares;
 using AuthAPI.Services;
 using dotenv.net;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -77,7 +78,10 @@ namespace AuthAPI
                 app.MapOpenApi();
             }
 
+            app.UseCors("AllowConfiguredOrigins");
+            app.UseMiddleware<ExceptionHandlingMiddleware>();
             app.UseHttpsRedirection();
+            app.UseAuthentication();
             app.UseAuthorization();
             app.MapControllers();
 
