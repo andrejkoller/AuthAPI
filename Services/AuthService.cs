@@ -93,5 +93,25 @@ namespace AuthAPI.Services
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
+
+        public async Task<PublicUserDTO> GetCurrentUserByToken(string token)
+        {
+            var handler = new JwtSecurityTokenHandler();
+            var jwtToken = handler.ReadJwtToken(token);
+
+            var userIdClaim = jwtToken.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)
+                ?? throw new UnauthorizedAccessException("Invalid token: User ID claim is missing.");
+
+            if (!int.TryParse(userIdClaim.Value, out var userId))
+            {
+                throw new UnauthorizedAccessException("Invalid token: User ID claim is not a valid integer.");
+            }
+
+            var user = await dbContext.Users.FindAsync(userId);
+
+            return user == null
+                ? throw new UnauthorizedAccessException("User not found.")
+                : UserMapper.MapToPublicUser(user);
+        }
     }
 }

@@ -11,6 +11,11 @@ namespace AuthAPI.Models
         public string Email { get; set; } = string.Empty;
         public string? PhoneNumber { get; set; } = null;
         public string PasswordHash { get; set; } = string.Empty;
+        public string? Street { get; set; } = null;
+        public string? City { get; set; } = null;
+        public string? State { get; set; } = null;
+        public string? ZipCode { get; set; } = null;
+        public string? Country { get; set; } = null;
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;

@@ -23,5 +23,22 @@ namespace AuthAPI.Controllers
             var user = await authService.LoginUserAsync(request);
             return Ok(user);
         }
+
+        [HttpGet("me")]
+        public async Task<IActionResult> GetCurrentUserAsync()
+        {
+            var authHeader = HttpContext.Request.Headers.Authorization.FirstOrDefault();
+
+            if (string.IsNullOrEmpty(authHeader) || !authHeader.StartsWith("Bearer "))
+            {
+                return Unauthorized("Missing or invalid Authorization header.");
+            }
+
+            var token = authHeader.Substring("Bearer ".Length).Trim();
+
+            var user = await authService.GetCurrentUserByToken(token);
+
+            return Ok(user);
+        }
     }
 }
