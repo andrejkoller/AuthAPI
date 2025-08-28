@@ -4,6 +4,7 @@ namespace AuthAPI.DTOs
 {
     public class UpdatePasswordRequestDTO
     {
+        public int Id { get; set; }
         [Required(ErrorMessage = "Current password is required.")]
         public string CurrentPassword { get; set; } = string.Empty;
         [Required(ErrorMessage = "New password is required.")]

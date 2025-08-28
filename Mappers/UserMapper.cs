@@ -14,10 +14,10 @@ namespace AuthAPI.Mappers
 
             return new PublicUserDTO
             {
+                Id = user.Id,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 Email = user.Email,
-                PhoneNumber = user.PhoneNumber,
             };
         }
     }

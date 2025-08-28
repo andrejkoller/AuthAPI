@@ -4,6 +4,7 @@ namespace AuthAPI.DTOs
 {
     public class UpdateNameRequestDTO
     {
+        public int Id { get; set; }
         [Required(ErrorMessage = "First name is required.")]
         public string FirstName { get; set; } = string.Empty;
         [Required(ErrorMessage = "Last name is required.")]

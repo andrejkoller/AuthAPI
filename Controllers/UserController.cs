@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using AuthAPI.Services;
+using AuthAPI.DTOs;
 
 namespace AuthAPI.Controllers
 {
@@ -14,6 +15,28 @@ namespace AuthAPI.Controllers
         {
             var users = await userService.GetAllUsersAsync();
             return Ok(users);
+        }
+
+        [HttpPut("{userId}/name")]
+        public async Task<IActionResult> UpdateUserNameAsync(int userId, [FromBody] UpdateNameRequestDTO request)
+        {
+            var updatedUser = await userService.UpdateUserName(userId, request);
+
+            if (updatedUser == null)
+                return NotFound("User not found.");
+
+            return Ok(updatedUser);
+        }
+
+        [HttpPut("{userId}/email")]
+        public async Task<IActionResult> UpdateUserEmailAsync(int userId, [FromBody] UpdateEmailRequestDTO request)
+        {
+            var updatedUser = await userService.UpdateUserEmail(userId, request);
+
+            if (updatedUser == null)
+                return NotFound("User not found.");
+
+            return Ok(updatedUser);
         }
     }
 }

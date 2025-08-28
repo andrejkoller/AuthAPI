@@ -30,5 +30,42 @@ namespace AuthAPI.Services
                 .ToListAsync();
             return [.. users.Select(UserMapper.MapToPublicUser)];
         }
+
+        public async Task<PublicUserDTO?> UpdateUserName(int userId, UpdateNameRequestDTO request)
+        {
+            var user = await dbContext.Users
+                .FirstOrDefaultAsync(u => u.Id == userId);
+
+            if (user == null)
+                return null;
+
+            user.FirstName = request.FirstName ?? user.FirstName;
+            user.LastName = request.LastName ?? user.LastName;
+
+            user.UpdatedAt = DateTime.UtcNow;
+
+            dbContext.Users.Update(user);
+            await dbContext.SaveChangesAsync();
+            return UserMapper.MapToPublicUser(user);
+        }
+
+        public async Task<PublicUserDTO?> UpdateUserEmail(int userId, UpdateEmailRequestDTO request)
+        {
+            var user = await dbContext.Users
+                .FirstOrDefaultAsync(u => u.Id == userId) ?? throw new KeyNotFoundException("User not found");
+
+            var emailExists = await dbContext.Users
+                .AnyAsync(u => u.Email == request.Email && u.Id != userId);
+
+            if (emailExists)
+                throw new InvalidOperationException("Email is already in use by another account");
+
+            user.Email = request.Email;
+            user.UpdatedAt = DateTime.UtcNow;
+
+            dbContext.Users.Update(user);
+            await dbContext.SaveChangesAsync();
+            return UserMapper.MapToPublicUser(user);
+        }
     }
 }
