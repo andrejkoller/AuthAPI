@@ -18,6 +18,7 @@ namespace AuthAPI.Mappers
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 Email = user.Email,
+                IsNewsletterSubscribed = user.IsNewsletterSubscribed
             };
         }
     }

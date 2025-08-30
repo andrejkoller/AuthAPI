@@ -67,5 +67,66 @@ namespace AuthAPI.Services
             await dbContext.SaveChangesAsync();
             return UserMapper.MapToPublicUser(user);
         }
+
+        public async Task<bool> DeactivateUserAsync(int userId)
+        {
+            var user = await dbContext.Users
+                .FirstOrDefaultAsync(u => u.Id == userId);
+
+            if (user == null)
+                return false;
+
+            user.IsActive = false;
+            user.UpdatedAt = DateTime.UtcNow;
+
+            dbContext.Users.Update(user);
+            await dbContext.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<bool> ReactivateUserAsync(int userId)
+        {
+            var user = await dbContext.Users
+                .FirstOrDefaultAsync(u => u.Id == userId);
+
+            if (user == null)
+                return false;
+
+            user.IsActive = true;
+            user.UpdatedAt = DateTime.UtcNow;
+
+            dbContext.Users.Update(user);
+            await dbContext.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<bool> DeleteUserAsync(int userId)
+        {
+            var user = await dbContext.Users
+                .FirstOrDefaultAsync(u => u.Id == userId);
+
+            if (user == null)
+                return false;
+
+            dbContext.Users.Remove(user);
+            await dbContext.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<PublicUserDTO?> SubscribeNewsletterAsync(int userId, UpdateNewsletterSubscribeRequestDTO request)
+        {
+            var user = await dbContext.Users
+                .FirstOrDefaultAsync(u => u.Id == userId);
+
+            if (user == null)
+                return null;
+
+            user.IsNewsletterSubscribed = request.IsNewsletterSubscribed;
+            user.UpdatedAt = DateTime.UtcNow;
+
+            dbContext.Users.Update(user);
+            await dbContext.SaveChangesAsync();
+            return UserMapper.MapToPublicUser(user);
+        }
     }
 }

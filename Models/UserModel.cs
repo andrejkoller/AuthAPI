@@ -19,5 +19,6 @@ namespace AuthAPI.Models
 
         public bool IsEmailVerified { get; set; } = false;
         public bool IsActive { get; set; } = true;
+        public bool? IsNewsletterSubscribed { get; set; }
     }
 }
