@@ -2,6 +2,7 @@
 using AuthAPI.DTOs;
 using AuthAPI.Mappers;
 using AuthAPI.Data;
+using AuthAPI.Models;
 
 namespace AuthAPI.Services
 {
@@ -122,6 +123,32 @@ namespace AuthAPI.Services
                 return null;
 
             user.IsNewsletterSubscribed = request.IsNewsletterSubscribed;
+            user.UpdatedAt = DateTime.UtcNow;
+
+            dbContext.Users.Update(user);
+            await dbContext.SaveChangesAsync();
+            return UserMapper.MapToPublicUser(user);
+        }
+
+        public async Task<PublicUserDTO?> UpdateUserAddressAsync(int userId, UpdateAddressRequestDTO request)
+        {
+            var user = await dbContext.Users
+                .FirstOrDefaultAsync(u => u.Id == userId);
+
+            if (user == null)
+                return null;
+
+            if (request.Address != null)
+            {
+                user.Address = new AddressModel
+                {
+                    Country = request.Address.Country,
+                    State = request.Address.State,
+                    City = request.Address.City,
+                    ZipCode = request.Address.ZipCode
+                };
+            }
+
             user.UpdatedAt = DateTime.UtcNow;
 
             dbContext.Users.Update(user);

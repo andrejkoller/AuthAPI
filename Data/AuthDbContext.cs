@@ -11,8 +11,12 @@ namespace AuthAPI.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
             modelBuilder.Entity<UserModel>()
                 .ToTable("Users");
+
+            modelBuilder.Entity<UserModel>()
+                .OwnsOne(u => u.Address);
         }
 
         public override int SaveChanges()

@@ -1,4 +1,5 @@
-﻿using AuthAPI.Interfaces;
+﻿using AuthAPI.DTOs;
+using AuthAPI.Interfaces;
 
 namespace AuthAPI.Models
 {
@@ -10,6 +11,7 @@ namespace AuthAPI.Models
         public string LastName { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
         public string PasswordHash { get; set; } = string.Empty;
+        public AddressModel? Address { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;

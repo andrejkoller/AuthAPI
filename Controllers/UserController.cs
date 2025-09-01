@@ -50,7 +50,7 @@ namespace AuthAPI.Controllers
             return Ok(new { Message = "User deactivated successfully." });
         }
 
-        [HttpPost("{userId}/reactivate")]
+        [HttpPut("{userId}/reactivate")]
         public async Task<IActionResult> ReactivateUserAsync(int userId)
         {
             var success = await userService.ReactivateUserAsync(userId);
@@ -72,10 +72,21 @@ namespace AuthAPI.Controllers
             return Ok(new { Message = "User deleted successfully." });
         }
 
-        [HttpPost("{userId}/subscribe")]
+        [HttpPut("{userId}/newsletter")]
         public async Task<IActionResult> SubscribeNewsletterAsync(int userId, [FromBody] UpdateNewsletterSubscribeRequestDTO request)
         {
             var updatedUser = await userService.SubscribeNewsletterAsync(userId, request);
+
+            if (updatedUser == null)
+                return NotFound("User not found.");
+
+            return Ok(updatedUser);
+        }
+
+        [HttpPut("{userId}/address")]
+        public async Task<IActionResult> UpdateUserAddressAsync(int userId, [FromBody] UpdateAddressRequestDTO request)
+        {
+            var updatedUser = await userService.UpdateUserAddressAsync(userId, request);
 
             if (updatedUser == null)
                 return NotFound("User not found.");
